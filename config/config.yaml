@@ -1,0 +1,153 @@
+# MLB Pitch Sequencing Configuration File
+# Centralized configuration for the baseball analytics pipeline
+
+# Data Processing Configuration
+data:
+  # Data sources and paths
+  data_dir: "data"
+  cache_enabled: true
+  years: [2023]  # Years of data to analyze
+  
+  # Data filtering parameters
+  min_pitch_count: 10  # Minimum pitches per pitcher
+  exclude_pitchers: []  # Pitcher IDs to exclude
+  
+  # Sample data parameters (used when real data unavailable)
+  sample_data:
+    n_pitches: 10000
+    random_seed: 42
+
+# Feature Engineering Configuration
+features:
+  # Sequence feature parameters
+  sequence_memory: 3  # Number of previous pitches to remember
+  
+  # Zone configuration (9-zone grid)
+  zones:
+    horizontal_bounds: [-0.8, 0.8]  # Left/right boundaries
+    vertical_zones: 4  # Number of vertical zones
+  
+  # Pitch type standardization
+  pitch_type_mapping:
+    FF: ['FF', 'FT', 'FA']
+    SL: ['SL', 'ST', 'SLV'] 
+    CH: ['CH', 'FS']
+    CU: ['CU', 'KC', 'KN']
+    SI: ['SI']
+    FC: ['FC']
+  
+  # Reward function parameters
+  rewards:
+    strike: 1.0
+    ball: -0.5
+    foul_two_strikes: 0.5
+    foul_regular: 0.3
+    contact: -0.2
+
+# Model Configuration
+modeling:
+  # Training parameters
+  test_size: 0.2
+  random_state: 42
+  time_based_split: true  # Use time-based rather than random split
+  
+  # XGBoost parameters
+  xgboost:
+    n_estimators: 200
+    max_depth: 6
+    learning_rate: 0.1
+    random_state: 42
+    n_jobs: -1
+  
+  # Random Forest parameters
+  random_forest:
+    n_estimators: 100
+    max_depth: 10
+    random_state: 42
+    n_jobs: -1
+  
+  # Cross-validation
+  cv_folds: 5
+  cv_scoring: 'r2'
+
+# Recommendation Engine Configuration
+recommendations:
+  # Default number of recommendations to return
+  default_top_k: 3
+  
+  # Validation rules
+  validation:
+    max_balls: 3
+    max_strikes: 2 
+    max_outs: 2
+    max_innings: 20
+    
+  # Risk assessment thresholds
+  risk_levels:
+    high_risk_counts: ['3-0', '3-1', '2-2']
+    safe_zones: ['Z10', 'Z11', 'Z12', 'Z21']
+    risky_zones: ['Z00', 'Z02', 'Z20', 'Z22']
+
+# Simulation Configuration
+simulation:
+  # Pitch outcome probabilities by type
+  pitch_outcomes:
+    FF: {strike: 0.35, ball: 0.40, contact: 0.25}
+    SL: {strike: 0.45, ball: 0.35, contact: 0.20}
+    CH: {strike: 0.40, ball: 0.35, contact: 0.25}
+    CU: {strike: 0.50, ball: 0.30, contact: 0.20}
+    SI: {strike: 0.38, ball: 0.37, contact: 0.25}
+    FC: {strike: 0.42, ball: 0.33, contact: 0.25}
+  
+  # Contact outcome probabilities
+  contact_outcomes:
+    in_zone: {single: 0.25, double: 0.08, triple: 0.02, home_run: 0.05, out: 0.60}
+    out_zone: {single: 0.15, double: 0.03, out: 0.82}
+
+# Monitoring Configuration
+monitoring:
+  # Drift detection thresholds
+  performance_threshold: 0.1  # 10% change triggers alert
+  feature_threshold: 0.2     # 20% change triggers alert
+  
+  # Performance metrics to track
+  metrics: ['rmse', 'mae', 'r2']
+  
+  # History retention
+  max_evaluations: 100
+  
+  # Alert settings
+  alert_levels: ['INFO', 'WARNING', 'CRITICAL']
+
+# Visualization Configuration  
+visualization:
+  # Plot settings
+  figure_size: [15, 12]
+  color_palette: ['steelblue', 'darkorange', 'forestgreen', 'crimson']
+  
+  # Export settings
+  save_plots: true
+  plot_format: 'png'
+  dpi: 300
+
+# Output Configuration
+output:
+  # Directory structure
+  models_dir: "models"
+  outputs_dir: "outputs" 
+  logs_dir: "logs"
+  
+  # Export formats
+  export_csv: true
+  export_parquet: false
+  
+  # Model persistence
+  save_models: true
+  model_format: 'pickle'
+
+# Logging Configuration
+logging:
+  level: 'INFO'
+  format: '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+  file_logging: true
+  console_logging: true
