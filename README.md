@@ -124,10 +124,18 @@ mlb-pitch-sequencing/
    ```bash
    git clone <your-repo-url>
    cd mlb-pitch-sequencing
-2. python -m venv .venv
-3. source .venv/bin/activate for macOS or Linux or activate .venv\Scripts\Activate.ps1 for Windows  # activate virtual environment
-4. pip install -r requirements.txt  # install dependencies
-5. python main.py  # Run complete pipeline from raw data to results 
+2. Create a virtual environment: 
+   ```bash
+   python -m venv .venv
+3. Activate virtual environment: 
+   ```bash
+   source .venv/bin/activate for macOS or Linux or activate .venv\Scripts\Activate.ps1 for Windows
+4. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+6. Run the main pipeline, from data to results:
+   ```bash
+   python main.py  
 
 
 ### Development Workflow
