@@ -61,7 +61,7 @@ mlb-pitch-sequencing/
     ├── test_data_processing.py
     ├── test_feature_engineering.py
     └── test_recommendation_engine.py
-
+```
 ## Module Descriptions
 
 ### Core Modules (src/)
